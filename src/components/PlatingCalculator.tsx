@@ -20,7 +20,7 @@ const RECOMMENDED_LIMITS: Record<Material, number> = {
 };
 
 type ThicknessUnit = 'µm' | 'mm';
-type JobType = 'single' | 'three-stage';
+type JobType = 'single' | 'two-stage' | 'three-stage';
 
 const STORAGE_KEY = 'plating-calculator-settings';
 
@@ -146,9 +146,9 @@ export function PlatingCalculator({ totalSurfaceArea_dm2 }: PlatingCalculatorPro
   const stage2DensityNum = parseFloat(stage2Density) || 0;
   const stage3DensityNum = parseFloat(stage3Density) || 0;
 
-  // Calculate thickness after stages 1 & 2 (for 3-stage jobs)
+  // Calculate thickness after stages 1 & 2 (for 2-stage and 3-stage jobs)
   const thicknessAfterStage1 = useMemo(() => {
-    if (jobType === 'three-stage' && stage1Time && stage1DensityNum > 0 && efficiencyDecimal > 0) {
+    if ((jobType === 'two-stage' || jobType === 'three-stage') && stage1Time && stage1DensityNum > 0 && efficiencyDecimal > 0) {
       const timeSeconds = parseTime(stage1Time);
       if (timeSeconds > 0) {
         return calculateThicknessFromTime(timeSeconds, stage1DensityNum, efficiencyDecimal, material);
@@ -158,6 +158,11 @@ export function PlatingCalculator({ totalSurfaceArea_dm2 }: PlatingCalculatorPro
   }, [jobType, stage1Time, stage1DensityNum, efficiencyDecimal, material]);
 
   const thicknessAfterStage2 = useMemo(() => {
+    // For 2-stage jobs, skip stage 2, so thicknessAfterStage2 = thicknessAfterStage1
+    if (jobType === 'two-stage') {
+      return thicknessAfterStage1;
+    }
+    // For 3-stage jobs, calculate stage 2 thickness
     if (jobType === 'three-stage' && stage2Time && stage2DensityNum > 0 && efficiencyDecimal > 0) {
       const timeSeconds = parseTime(stage2Time);
       if (timeSeconds > 0) {
@@ -173,16 +178,16 @@ export function PlatingCalculator({ totalSurfaceArea_dm2 }: PlatingCalculatorPro
     if (totalSurfaceArea_dm2 > 0) {
       if (jobType === 'single' && currentDensityNum > 0) {
         return calculateTotalCurrent(totalSurfaceArea_dm2, currentDensityNum);
-      } else if (jobType === 'three-stage' && stage3DensityNum > 0) {
+      } else if ((jobType === 'two-stage' || jobType === 'three-stage') && stage3DensityNum > 0) {
         return calculateTotalCurrent(totalSurfaceArea_dm2, stage3DensityNum);
       }
     }
     return 0;
   }, [jobType, totalSurfaceArea_dm2, currentDensityNum, stage3DensityNum]);
 
-  // Stage 1 & 2 current calculations (for 3-stage jobs)
+  // Stage 1 & 2 current calculations (for 2-stage and 3-stage jobs)
   const stage1Current = useMemo(() => {
-    if (jobType === 'three-stage' && totalSurfaceArea_dm2 > 0 && stage1DensityNum > 0) {
+    if ((jobType === 'two-stage' || jobType === 'three-stage') && totalSurfaceArea_dm2 > 0 && stage1DensityNum > 0) {
       return calculateTotalCurrent(totalSurfaceArea_dm2, stage1DensityNum);
     }
     return 0;
@@ -226,9 +231,9 @@ export function PlatingCalculator({ totalSurfaceArea_dm2 }: PlatingCalculatorPro
         }
       }
     } else {
-      // 3-stage: Stage 3 calculation
+      // 2-stage or 3-stage: Final stage calculation
       if (stage3Mode === 'thickness-to-time' && stage3ThicknessInput) {
-        // For stage 3, we need the remaining thickness (target - accumulated)
+        // For final stage, we need the remaining thickness (target - accumulated)
         const targetThickness = stage3ThicknessInMicrometers;
         const remainingThickness = targetThickness - thicknessAfterStage2;
         if (remainingThickness > 0 && stage3DensityNum > 0 && efficiencyDecimal > 0) {
@@ -249,13 +254,13 @@ export function PlatingCalculator({ totalSurfaceArea_dm2 }: PlatingCalculatorPro
         }
       }
     } else {
-      // 3-stage: Stage 3 calculation
+      // 2-stage or 3-stage: Final stage calculation
       if (stage3Mode === 'time-to-thickness' && stage3TimeInput) {
         const timeSeconds = parseTime(stage3TimeInput);
         if (timeSeconds > 0 && stage3DensityNum > 0 && efficiencyDecimal > 0) {
-          const stage3Thickness = calculateThicknessFromTime(timeSeconds, stage3DensityNum, efficiencyDecimal, material);
-          // Total thickness = accumulated from stages 1 & 2 + stage 3
-          return thicknessAfterStage2 + stage3Thickness;
+          const finalStageThickness = calculateThicknessFromTime(timeSeconds, stage3DensityNum, efficiencyDecimal, material);
+          // Total thickness = accumulated from previous stages + final stage
+          return thicknessAfterStage2 + finalStageThickness;
         }
       }
     }
@@ -318,6 +323,16 @@ export function PlatingCalculator({ totalSurfaceArea_dm2 }: PlatingCalculatorPro
               style={{ marginRight: '8px' }}
             />
             Single Stage
+          </label>
+          <label style={{ display: 'flex', alignItems: 'center', cursor: 'pointer' }}>
+            <input
+              type="radio"
+              value="two-stage"
+              checked={jobType === 'two-stage'}
+              onChange={(e) => setJobType(e.target.value as JobType)}
+              style={{ marginRight: '8px' }}
+            />
+            2 Stage
           </label>
           <label style={{ display: 'flex', alignItems: 'center', cursor: 'pointer' }}>
             <input
@@ -522,7 +537,7 @@ export function PlatingCalculator({ totalSurfaceArea_dm2 }: PlatingCalculatorPro
         </>
       ) : (
         <>
-          {/* 3-Stage UI */}
+          {/* 2-Stage or 3-Stage UI */}
           {/* Stage 1 */}
           <div style={{ marginBottom: '20px', padding: '15px', backgroundColor: '#f9f9f9', borderRadius: '4px' }}>
             <h3 style={{ marginBottom: '15px', fontSize: '18px' }}>Stage 1</h3>
@@ -575,7 +590,8 @@ export function PlatingCalculator({ totalSurfaceArea_dm2 }: PlatingCalculatorPro
             )}
           </div>
 
-          {/* Stage 2 */}
+          {/* Stage 2 (only for 3-stage jobs) */}
+          {jobType === 'three-stage' && (
           <div style={{ marginBottom: '20px', padding: '15px', backgroundColor: '#f9f9f9', borderRadius: '4px' }}>
             <h3 style={{ marginBottom: '15px', fontSize: '18px' }}>Stage 2</h3>
             <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '15px' }}>
@@ -626,10 +642,13 @@ export function PlatingCalculator({ totalSurfaceArea_dm2 }: PlatingCalculatorPro
               </div>
             )}
           </div>
+          )}
 
-          {/* Stage 3 */}
+          {/* Final Stage (Stage 2 for 2-stage, Stage 3 for 3-stage) */}
           <div style={{ marginBottom: '20px', padding: '15px', backgroundColor: '#f0f8ff', borderRadius: '4px' }}>
-            <h3 style={{ marginBottom: '15px', fontSize: '18px' }}>Stage 3</h3>
+            <h3 style={{ marginBottom: '15px', fontSize: '18px' }}>
+              {jobType === 'two-stage' ? 'Stage 2' : 'Stage 3'}
+            </h3>
             
             <div style={{ marginBottom: '15px' }}>
               <label style={{ display: 'block', marginBottom: '8px', fontWeight: '500' }}>
@@ -832,8 +851,8 @@ export function PlatingCalculator({ totalSurfaceArea_dm2 }: PlatingCalculatorPro
           </div>
         ) : (
           <div>
-            {/* Stage 1, 2 & 3 Current Results */}
-            <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr 1fr', gap: '15px', marginBottom: '20px' }}>
+            {/* Stage Current Results */}
+            <div style={{ display: 'grid', gridTemplateColumns: jobType === 'three-stage' ? '1fr 1fr 1fr' : '1fr 1fr', gap: '15px', marginBottom: '20px' }}>
               <div>
                 <div style={{ fontSize: '12px', color: '#666', marginBottom: '4px' }}>
                   Stage 1 Required Current
@@ -842,17 +861,19 @@ export function PlatingCalculator({ totalSurfaceArea_dm2 }: PlatingCalculatorPro
                   {stage1Current > 0 ? `${stage1Current.toFixed(3)} A` : 'N/A'}
                 </div>
               </div>
+              {jobType === 'three-stage' && (
+                <div>
+                  <div style={{ fontSize: '12px', color: '#666', marginBottom: '4px' }}>
+                    Stage 2 Required Current
+                  </div>
+                  <div style={{ fontSize: '20px', fontWeight: '600' }}>
+                    {stage2Current > 0 ? `${stage2Current.toFixed(3)} A` : 'N/A'}
+                  </div>
+                </div>
+              )}
               <div>
                 <div style={{ fontSize: '12px', color: '#666', marginBottom: '4px' }}>
-                  Stage 2 Required Current
-                </div>
-                <div style={{ fontSize: '20px', fontWeight: '600' }}>
-                  {stage2Current > 0 ? `${stage2Current.toFixed(3)} A` : 'N/A'}
-                </div>
-              </div>
-              <div>
-                <div style={{ fontSize: '12px', color: '#666', marginBottom: '4px' }}>
-                  Stage 3 Required Current
+                  {jobType === 'two-stage' ? 'Stage 2' : 'Stage 3'} Required Current
                 </div>
                 <div style={{ fontSize: '20px', fontWeight: '600' }}>
                   {totalCurrent > 0 ? `${totalCurrent.toFixed(3)} A` : 'N/A'}
@@ -860,13 +881,13 @@ export function PlatingCalculator({ totalSurfaceArea_dm2 }: PlatingCalculatorPro
               </div>
             </div>
 
-            {/* Stage 3 Results */}
+            {/* Final Stage Results */}
             <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '15px', marginBottom: '20px' }}>
               {stage3Mode === 'thickness-to-time' ? (
                 <>
                   <div>
                     <div style={{ fontSize: '12px', color: '#666', marginBottom: '4px' }}>
-                      Stage 3 Required Time
+                      {jobType === 'two-stage' ? 'Stage 2' : 'Stage 3'} Required Time
                     </div>
                     <div style={{ fontSize: '20px', fontWeight: '600' }}>
                       {calculatedTime !== null ? formatTime(calculatedTime) : 'N/A'}
@@ -885,7 +906,7 @@ export function PlatingCalculator({ totalSurfaceArea_dm2 }: PlatingCalculatorPro
                 <>
                   <div>
                     <div style={{ fontSize: '12px', color: '#666', marginBottom: '4px' }}>
-                      Stage 3 Available Time
+                      {jobType === 'two-stage' ? 'Stage 2' : 'Stage 3'} Available Time
                     </div>
                     <div style={{ fontSize: '20px', fontWeight: '600' }}>{stage3TimeInput}</div>
                   </div>
@@ -903,7 +924,7 @@ export function PlatingCalculator({ totalSurfaceArea_dm2 }: PlatingCalculatorPro
               )}
               <div>
                 <div style={{ fontSize: '12px', color: '#666', marginBottom: '4px' }}>
-                  Stage 3 Deposition Rate
+                  {jobType === 'two-stage' ? 'Stage 2' : 'Stage 3'} Deposition Rate
                 </div>
                 <div style={{ fontSize: '20px', fontWeight: '600' }}>
                   {depositionRate > 0 ? `${depositionRate.toFixed(3)} µm/min` : 'N/A'}
@@ -912,10 +933,10 @@ export function PlatingCalculator({ totalSurfaceArea_dm2 }: PlatingCalculatorPro
             </div>
 
             {/* Cumulative Summary */}
-            {thicknessAfterStage2 > 0 && (
+            {thicknessAfterStage1 > 0 && (
               <div style={{ padding: '15px', backgroundColor: '#fff', borderRadius: '4px', border: '1px solid #ddd' }}>
                 <h4 style={{ marginBottom: '10px', fontSize: '16px' }}>Cumulative Summary</h4>
-                <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr 1fr', gap: '10px', fontSize: '14px' }}>
+                <div style={{ display: 'grid', gridTemplateColumns: jobType === 'three-stage' ? '1fr 1fr 1fr' : '1fr 1fr', gap: '10px', fontSize: '14px' }}>
                   <div>
                     <div style={{ color: '#666' }}>Thickness after Stage 1:</div>
                     <div style={{ fontWeight: '600' }}>
@@ -924,14 +945,16 @@ export function PlatingCalculator({ totalSurfaceArea_dm2 }: PlatingCalculatorPro
                         : thicknessAfterStage1.toFixed(2)} {thicknessUnit}
                     </div>
                   </div>
-                  <div>
-                    <div style={{ color: '#666' }}>Thickness after Stage 2:</div>
-                    <div style={{ fontWeight: '600' }}>
-                      {thicknessUnit === 'mm' 
-                        ? (thicknessAfterStage2 / 1000).toFixed(4) 
-                        : thicknessAfterStage2.toFixed(2)} {thicknessUnit}
+                  {jobType === 'three-stage' && (
+                    <div>
+                      <div style={{ color: '#666' }}>Thickness after Stage 2:</div>
+                      <div style={{ fontWeight: '600' }}>
+                        {thicknessUnit === 'mm' 
+                          ? (thicknessAfterStage2 / 1000).toFixed(4) 
+                          : thicknessAfterStage2.toFixed(2)} {thicknessUnit}
+                      </div>
                     </div>
-                  </div>
+                  )}
                   {calculatedThicknessDisplay !== null && (
                     <div>
                       <div style={{ color: '#666' }}>Final Thickness:</div>
