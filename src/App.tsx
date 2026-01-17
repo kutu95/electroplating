@@ -17,9 +17,20 @@ function App() {
   return (
     <div style={{ maxWidth: '1200px', margin: '0 auto', padding: '20px' }}>
       <header style={{ marginBottom: '30px' }}>
-        <h1 style={{ fontSize: '32px', marginBottom: '10px' }}>
-          Electroplating Calculator
-        </h1>
+        <div style={{ display: 'flex', alignItems: 'center', gap: '15px', marginBottom: '10px' }}>
+          <img 
+            src="/logo.svg" 
+            alt="Electroplating Calculator Logo" 
+            style={{ 
+              height: '48px', 
+              width: '48px',
+              flexShrink: 0
+            }} 
+          />
+          <h1 style={{ fontSize: '32px', margin: 0 }}>
+            Electroplating Calculator
+          </h1>
+        </div>
         <p style={{ color: '#666', fontSize: '14px' }}>
           Workshop-grade calculator for computing surface area and electroplating parameters
           using Faraday's law
