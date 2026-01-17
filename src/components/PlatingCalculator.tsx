@@ -1,4 +1,4 @@
-import { useState, useMemo } from 'react';
+import { useState, useMemo, useEffect } from 'react';
 import type { Material, CalculationMode } from '../types';
 import {
   calculateTimeFromThickness,
@@ -22,29 +22,121 @@ const RECOMMENDED_LIMITS: Record<Material, number> = {
 type ThicknessUnit = 'µm' | 'mm';
 type JobType = 'single' | 'three-stage';
 
+const STORAGE_KEY = 'plating-calculator-settings';
+
+// Helper functions for localStorage
+function loadFromStorage<T>(key: string, defaultValue: T): T {
+  try {
+    const item = localStorage.getItem(STORAGE_KEY);
+    if (item) {
+      const parsed = JSON.parse(item);
+      return parsed[key] !== undefined ? parsed[key] : defaultValue;
+    }
+  } catch (error) {
+    console.error('Error loading from localStorage:', error);
+  }
+  return defaultValue;
+}
+
+function saveToStorage(key: string, value: unknown): void {
+  try {
+    const item = localStorage.getItem(STORAGE_KEY);
+    const data = item ? JSON.parse(item) : {};
+    data[key] = value;
+    localStorage.setItem(STORAGE_KEY, JSON.stringify(data));
+  } catch (error) {
+    console.error('Error saving to localStorage:', error);
+  }
+}
+
 export function PlatingCalculator({ totalSurfaceArea_dm2 }: PlatingCalculatorProps) {
-  const [jobType, setJobType] = useState<JobType>('single');
-  const [material, setMaterial] = useState<Material>('Copper');
-  const [efficiency, setEfficiency] = useState(100); // Percentage (50-100)
+  const [jobType, setJobType] = useState<JobType>(loadFromStorage('jobType', 'single'));
+  const [material, setMaterial] = useState<Material>(loadFromStorage('material', 'Copper'));
+  const [efficiency, setEfficiency] = useState<number>(loadFromStorage('efficiency', 100));
   
   // Single stage or Stage 3 state
-  const [currentDensity, setCurrentDensity] = useState<string>('2.0');
-  const [mode, setMode] = useState<CalculationMode>('thickness-to-time');
-  const [thicknessInput, setThicknessInput] = useState<string>('10');
-  const [thicknessUnit, setThicknessUnit] = useState<ThicknessUnit>('mm');
-  const [timeInput, setTimeInput] = useState<string>('01:00:00'); // hh:mm:ss
+  const [currentDensity, setCurrentDensity] = useState<string>(loadFromStorage('currentDensity', '2.0'));
+  const [mode, setMode] = useState<CalculationMode>(loadFromStorage('mode', 'thickness-to-time'));
+  const [thicknessInput, setThicknessInput] = useState<string>(loadFromStorage('thicknessInput', '1.0'));
+  const [thicknessUnit, setThicknessUnit] = useState<ThicknessUnit>(loadFromStorage('thicknessUnit', 'mm'));
+  const [timeInput, setTimeInput] = useState<string>(loadFromStorage('timeInput', '01:00:00'));
   
   // Stage 1 & 2 state (for 3-stage jobs)
-  const [stage1Density, setStage1Density] = useState<string>('0.5');
-  const [stage1Time, setStage1Time] = useState<string>('00:30:00');
-  const [stage2Density, setStage2Density] = useState<string>('1.0');
-  const [stage2Time, setStage2Time] = useState<string>('00:30:00');
+  const [stage1Density, setStage1Density] = useState<string>(loadFromStorage('stage1Density', '0.5'));
+  const [stage1Time, setStage1Time] = useState<string>(loadFromStorage('stage1Time', '00:30:00'));
+  const [stage2Density, setStage2Density] = useState<string>(loadFromStorage('stage2Density', '1.0'));
+  const [stage2Time, setStage2Time] = useState<string>(loadFromStorage('stage2Time', '00:30:00'));
   
   // Stage 3 state (for 3-stage jobs)
-  const [stage3Density, setStage3Density] = useState<string>('1.5');
-  const [stage3Mode, setStage3Mode] = useState<CalculationMode>('thickness-to-time');
-  const [stage3ThicknessInput, setStage3ThicknessInput] = useState<string>('1.0');
-  const [stage3TimeInput, setStage3TimeInput] = useState<string>('01:00:00');
+  const [stage3Density, setStage3Density] = useState<string>(loadFromStorage('stage3Density', '1.5'));
+  const [stage3Mode, setStage3Mode] = useState<CalculationMode>(loadFromStorage('stage3Mode', 'thickness-to-time'));
+  const [stage3ThicknessInput, setStage3ThicknessInput] = useState<string>(loadFromStorage('stage3ThicknessInput', '1.0'));
+  const [stage3TimeInput, setStage3TimeInput] = useState<string>(loadFromStorage('stage3TimeInput', '01:00:00'));
+
+  // Save all state to localStorage whenever it changes
+  useEffect(() => {
+    saveToStorage('jobType', jobType);
+  }, [jobType]);
+
+  useEffect(() => {
+    saveToStorage('material', material);
+  }, [material]);
+
+  useEffect(() => {
+    saveToStorage('efficiency', efficiency);
+  }, [efficiency]);
+
+  useEffect(() => {
+    saveToStorage('currentDensity', currentDensity);
+  }, [currentDensity]);
+
+  useEffect(() => {
+    saveToStorage('mode', mode);
+  }, [mode]);
+
+  useEffect(() => {
+    saveToStorage('thicknessInput', thicknessInput);
+  }, [thicknessInput]);
+
+  useEffect(() => {
+    saveToStorage('thicknessUnit', thicknessUnit);
+  }, [thicknessUnit]);
+
+  useEffect(() => {
+    saveToStorage('timeInput', timeInput);
+  }, [timeInput]);
+
+  useEffect(() => {
+    saveToStorage('stage1Density', stage1Density);
+  }, [stage1Density]);
+
+  useEffect(() => {
+    saveToStorage('stage1Time', stage1Time);
+  }, [stage1Time]);
+
+  useEffect(() => {
+    saveToStorage('stage2Density', stage2Density);
+  }, [stage2Density]);
+
+  useEffect(() => {
+    saveToStorage('stage2Time', stage2Time);
+  }, [stage2Time]);
+
+  useEffect(() => {
+    saveToStorage('stage3Density', stage3Density);
+  }, [stage3Density]);
+
+  useEffect(() => {
+    saveToStorage('stage3Mode', stage3Mode);
+  }, [stage3Mode]);
+
+  useEffect(() => {
+    saveToStorage('stage3ThicknessInput', stage3ThicknessInput);
+  }, [stage3ThicknessInput]);
+
+  useEffect(() => {
+    saveToStorage('stage3TimeInput', stage3TimeInput);
+  }, [stage3TimeInput]);
 
   const currentDensityNum = parseFloat(currentDensity) || 0;
   const efficiencyDecimal = efficiency / 100;
@@ -740,8 +832,8 @@ export function PlatingCalculator({ totalSurfaceArea_dm2 }: PlatingCalculatorPro
           </div>
         ) : (
           <div>
-            {/* Stage 1 & 2 Current Results */}
-            <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '15px', marginBottom: '20px' }}>
+            {/* Stage 1, 2 & 3 Current Results */}
+            <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr 1fr', gap: '15px', marginBottom: '20px' }}>
               <div>
                 <div style={{ fontSize: '12px', color: '#666', marginBottom: '4px' }}>
                   Stage 1 Required Current
@@ -756,6 +848,14 @@ export function PlatingCalculator({ totalSurfaceArea_dm2 }: PlatingCalculatorPro
                 </div>
                 <div style={{ fontSize: '20px', fontWeight: '600' }}>
                   {stage2Current > 0 ? `${stage2Current.toFixed(3)} A` : 'N/A'}
+                </div>
+              </div>
+              <div>
+                <div style={{ fontSize: '12px', color: '#666', marginBottom: '4px' }}>
+                  Stage 3 Required Current
+                </div>
+                <div style={{ fontSize: '20px', fontWeight: '600' }}>
+                  {totalCurrent > 0 ? `${totalCurrent.toFixed(3)} A` : 'N/A'}
                 </div>
               </div>
             </div>
@@ -801,14 +901,6 @@ export function PlatingCalculator({ totalSurfaceArea_dm2 }: PlatingCalculatorPro
                   </div>
                 </>
               )}
-              <div>
-                <div style={{ fontSize: '12px', color: '#666', marginBottom: '4px' }}>
-                  Stage 3 Required Current
-                </div>
-                <div style={{ fontSize: '20px', fontWeight: '600' }}>
-                  {totalCurrent > 0 ? `${totalCurrent.toFixed(3)} A` : 'N/A'}
-                </div>
-              </div>
               <div>
                 <div style={{ fontSize: '12px', color: '#666', marginBottom: '4px' }}>
                   Stage 3 Deposition Rate
