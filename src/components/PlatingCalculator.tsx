@@ -31,17 +31,17 @@ export function PlatingCalculator({ totalSurfaceArea_dm2 }: PlatingCalculatorPro
   const [currentDensity, setCurrentDensity] = useState<string>('2.0');
   const [mode, setMode] = useState<CalculationMode>('thickness-to-time');
   const [thicknessInput, setThicknessInput] = useState<string>('10');
-  const [thicknessUnit, setThicknessUnit] = useState<ThicknessUnit>('µm');
+  const [thicknessUnit, setThicknessUnit] = useState<ThicknessUnit>('mm');
   const [timeInput, setTimeInput] = useState<string>('01:00:00'); // hh:mm:ss
   
   // Stage 1 & 2 state (for 3-stage jobs)
   const [stage1Density, setStage1Density] = useState<string>('0.5');
   const [stage1Time, setStage1Time] = useState<string>('00:30:00');
-  const [stage2Density, setStage2Density] = useState<string>('0.5');
+  const [stage2Density, setStage2Density] = useState<string>('1.0');
   const [stage2Time, setStage2Time] = useState<string>('00:30:00');
   
   // Stage 3 state (for 3-stage jobs)
-  const [stage3Density, setStage3Density] = useState<string>('2.0');
+  const [stage3Density, setStage3Density] = useState<string>('1.5');
   const [stage3Mode, setStage3Mode] = useState<CalculationMode>('thickness-to-time');
   const [stage3ThicknessInput, setStage3ThicknessInput] = useState<string>('10');
   const [stage3TimeInput, setStage3TimeInput] = useState<string>('01:00:00');
@@ -424,9 +424,12 @@ export function PlatingCalculator({ totalSurfaceArea_dm2 }: PlatingCalculatorPro
                 <label style={{ display: 'block', marginBottom: '8px', fontWeight: '500' }}>
                   Current Density (A/dm²)
                 </label>
-                <select
+                <input
+                  type="number"
                   value={stage1Density}
                   onChange={(e) => setStage1Density(e.target.value)}
+                  min="0"
+                  step="0.1"
                   style={{
                     width: '100%',
                     padding: '8px',
@@ -434,11 +437,7 @@ export function PlatingCalculator({ totalSurfaceArea_dm2 }: PlatingCalculatorPro
                     borderRadius: '4px',
                     fontSize: '14px',
                   }}
-                >
-                  <option value="0.5">0.5</option>
-                  <option value="1.0">1.0</option>
-                  <option value="1.5">1.5</option>
-                </select>
+                />
               </div>
               <div>
                 <label style={{ display: 'block', marginBottom: '8px', fontWeight: '500' }}>
@@ -477,9 +476,12 @@ export function PlatingCalculator({ totalSurfaceArea_dm2 }: PlatingCalculatorPro
                 <label style={{ display: 'block', marginBottom: '8px', fontWeight: '500' }}>
                   Current Density (A/dm²)
                 </label>
-                <select
+                <input
+                  type="number"
                   value={stage2Density}
                   onChange={(e) => setStage2Density(e.target.value)}
+                  min="0"
+                  step="0.1"
                   style={{
                     width: '100%',
                     padding: '8px',
@@ -487,11 +489,7 @@ export function PlatingCalculator({ totalSurfaceArea_dm2 }: PlatingCalculatorPro
                     borderRadius: '4px',
                     fontSize: '14px',
                   }}
-                >
-                  <option value="0.5">0.5</option>
-                  <option value="1.0">1.0</option>
-                  <option value="1.5">1.5</option>
-                </select>
+                />
               </div>
               <div>
                 <label style={{ display: 'block', marginBottom: '8px', fontWeight: '500' }}>
