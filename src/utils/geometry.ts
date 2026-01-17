@@ -1,4 +1,4 @@
-import type { Triangle, ParseResult, STLUnit } from '../types';
+import type { Triangle, STLUnit } from '../types';
 
 /**
  * Convert length from one unit to millimeters

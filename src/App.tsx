@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import { useState } from 'react';
 import type { FileData, STLUnit } from './types';
 import { FileDropZone } from './components/FileDropZone';
 import { ResultsTable } from './components/ResultsTable';

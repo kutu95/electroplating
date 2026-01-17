@@ -1,5 +1,5 @@
-import React, { useState, useMemo } from 'react';
-import type { Material, CalculationMode, FileData } from '../types';
+import { useState, useMemo } from 'react';
+import type { Material, CalculationMode } from '../types';
 import {
   calculateTimeFromThickness,
   calculateThicknessFromTime,
