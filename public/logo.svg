@@ -2,83 +2,159 @@
   <!-- Background -->
   <rect width="200" height="200" fill="white"/>
   
-  <!-- Blue liquid (lower portion) -->
-  <path d="M 0 120 Q 40 110, 80 116 T 120 120 T 160 116 T 200 120 L 200 200 L 0 200 Z" fill="#1e3a8a" opacity="0.9"/>
+  <!-- Blue liquid (lower portion, deeper blue) -->
+  <defs>
+    <linearGradient id="liquidGradient" x1="0%" y1="0%" x2="0%" y2="100%">
+      <stop offset="0%" style="stop-color:#1e40af;stop-opacity:0.95" />
+      <stop offset="100%" style="stop-color:#1e3a8a;stop-opacity:0.95" />
+    </linearGradient>
+  </defs>
+  <path d="M 0 120 Q 40 110, 80 116 T 120 120 T 160 116 T 200 120 L 200 200 L 0 200 Z" fill="url(#liquidGradient)"/>
   
-  <!-- Wave crest -->
-  <path d="M 60 120 Q 80 115, 100 118 T 140 120" stroke="#3b82f6" stroke-width="2" fill="none" opacity="0.7"/>
+  <!-- Wave crest with more detail -->
+  <path d="M 60 120 Q 75 115, 90 118 Q 105 121, 120 120 Q 135 119, 140 120" stroke="#3b82f6" stroke-width="2.5" fill="none" opacity="0.8"/>
   
-  <!-- Bubbles in liquid -->
-  <circle cx="50" cy="150" r="6" fill="#60a5fa" opacity="0.6"/>
-  <circle cx="90" cy="140" r="4" fill="#60a5fa" opacity="0.6"/>
-  <circle cx="130" cy="160" r="5" fill="#60a5fa" opacity="0.6"/>
-  <circle cx="150" cy="144" r="4" fill="#60a5fa" opacity="0.6"/>
-  <circle cx="70" cy="170" r="3" fill="#60a5fa" opacity="0.6"/>
-  <circle cx="110" cy="165" r="3.5" fill="#60a5fa" opacity="0.6"/>
+  <!-- More bubbles in liquid with varying sizes and highlights -->
+  <g opacity="0.7">
+    <circle cx="50" cy="150" r="6" fill="#60a5fa">
+      <animate attributeName="cy" values="150;145;150" dur="3s" repeatCount="indefinite"/>
+    </circle>
+    <circle cx="50" cy="150" r="3" fill="white" opacity="0.6"/>
+    
+    <circle cx="90" cy="140" r="4" fill="#60a5fa">
+      <animate attributeName="cy" values="140;135;140" dur="2.5s" repeatCount="indefinite"/>
+    </circle>
+    <circle cx="90" cy="140" r="2" fill="white" opacity="0.6"/>
+    
+    <circle cx="130" cy="160" r="5" fill="#60a5fa">
+      <animate attributeName="cy" values="160;155;160" dur="3.5s" repeatCount="indefinite"/>
+    </circle>
+    <circle cx="130" cy="160" r="2.5" fill="white" opacity="0.6"/>
+    
+    <circle cx="150" cy="144" r="4" fill="#60a5fa">
+      <animate attributeName="cy" values="144;139;144" dur="2.8s" repeatCount="indefinite"/>
+    </circle>
+    <circle cx="150" cy="144" r="2" fill="white" opacity="0.6"/>
+    
+    <circle cx="70" cy="170" r="3" fill="#60a5fa">
+      <animate attributeName="cy" values="170;165;170" dur="3.2s" repeatCount="indefinite"/>
+    </circle>
+    <circle cx="70" cy="170" r="1.5" fill="white" opacity="0.6"/>
+    
+    <circle cx="110" cy="165" r="3.5" fill="#60a5fa">
+      <animate attributeName="cy" values="165;160;165" dur="2.7s" repeatCount="indefinite"/>
+    </circle>
+    <circle cx="110" cy="165" r="1.8" fill="white" opacity="0.6"/>
+    
+    <circle cx="35" cy="155" r="2.5" fill="#60a5fa">
+      <animate attributeName="cy" values="155;150;155" dur="3s" repeatCount="indefinite"/>
+    </circle>
+    <circle cx="35" cy="155" r="1.2" fill="white" opacity="0.6"/>
+  </g>
   
   <!-- Sparkles in bottom right -->
-  <g transform="translate(170, 180)">
-    <path d="M 0 -3 L 0 3 M -3 0 L 3 0" stroke="white" stroke-width="1.5" opacity="0.9"/>
-    <circle cx="0" cy="0" r="1" fill="white" opacity="0.9"/>
+  <g transform="translate(170, 180)" opacity="0.9">
+    <path d="M 0 -4 L 0 4 M -4 0 L 4 0" stroke="white" stroke-width="2" stroke-linecap="round"/>
+    <circle cx="0" cy="0" r="1.5" fill="white"/>
   </g>
-  <g transform="translate(185, 175)">
-    <path d="M 0 -2 L 0 2 M -2 0 L 2 0" stroke="white" stroke-width="1" opacity="0.8"/>
+  <g transform="translate(185, 175)" opacity="0.8">
+    <path d="M 0 -3 L 0 3 M -3 0 L 3 0" stroke="white" stroke-width="1.5" stroke-linecap="round"/>
+    <circle cx="0" cy="0" r="1" fill="white"/>
+  </g>
+  <g transform="translate(175, 190)" opacity="0.7">
+    <path d="M 0 -2.5 L 0 2.5 M -2.5 0 L 2.5 0" stroke="white" stroke-width="1.2" stroke-linecap="round"/>
   </g>
   
-  <!-- Golden gear (partially submerged) -->
+  <!-- Golden gear with 3D metallic appearance -->
   <g transform="translate(100, 100)">
-    <!-- Gear body with gradient -->
     <defs>
       <linearGradient id="gearGradient" x1="0%" y1="0%" x2="100%" y2="100%">
-        <stop offset="0%" style="stop-color:#f59e0b;stop-opacity:1" />
-        <stop offset="50%" style="stop-color:#d97706;stop-opacity:1" />
+        <stop offset="0%" style="stop-color:#fbbf24;stop-opacity:1" />
+        <stop offset="30%" style="stop-color:#f59e0b;stop-opacity:1" />
+        <stop offset="60%" style="stop-color:#d97706;stop-opacity:1" />
         <stop offset="100%" style="stop-color:#b45309;stop-opacity:1" />
       </linearGradient>
+      <radialGradient id="gearHighlight" cx="30%" cy="30%">
+        <stop offset="0%" style="stop-color:#fef3c7;stop-opacity:0.8" />
+        <stop offset="100%" style="stop-color:#f59e0b;stop-opacity:0" />
+      </radialGradient>
+      <filter id="gearShadow">
+        <feGaussianBlur in="SourceAlpha" stdDeviation="2"/>
+        <feOffset dx="2" dy="2" result="offsetblur"/>
+        <feComponentTransfer>
+          <feFuncA type="linear" slope="0.3"/>
+        </feComponentTransfer>
+        <feMerge>
+          <feMergeNode/>
+          <feMergeNode in="SourceGraphic"/>
+        </feMerge>
+      </filter>
     </defs>
+    
+    <!-- Gear shadow -->
+    <circle cx="2" cy="2" r="36" fill="#78350f" opacity="0.3" filter="url(#gearShadow)"/>
+    
+    <!-- Gear body with gradient -->
     <circle cx="0" cy="0" r="36" fill="url(#gearGradient)" stroke="#92400e" stroke-width="1"/>
-    <!-- Gear teeth (8 teeth) -->
-    <rect x="-1" y="-44" width="2" height="12" fill="url(#gearGradient)"/>
-    <rect x="-1" y="32" width="2" height="12" fill="url(#gearGradient)"/>
-    <rect x="-44" y="-1" width="12" height="2" fill="url(#gearGradient)"/>
-    <rect x="32" y="-1" width="12" height="2" fill="url(#gearGradient)"/>
-    <rect x="-30" y="-30" width="2" height="12" transform="rotate(45)" fill="url(#gearGradient)"/>
-    <rect x="28" y="28" width="2" height="12" transform="rotate(45)" fill="url(#gearGradient)"/>
-    <rect x="30" y="-30" width="2" height="12" transform="rotate(-45)" fill="url(#gearGradient)"/>
-    <rect x="-28" y="28" width="2" height="12" transform="rotate(-45)" fill="url(#gearGradient)"/>
-    <!-- Center hole -->
+    <circle cx="0" cy="0" r="36" fill="url(#gearHighlight)"/>
+    
+    <!-- Gear teeth (8 teeth, more prominent) -->
+    <rect x="-1.5" y="-44" width="3" height="14" fill="url(#gearGradient)" rx="1.5"/>
+    <rect x="-1.5" y="30" width="3" height="14" fill="url(#gearGradient)" rx="1.5"/>
+    <rect x="-44" y="-1.5" width="14" height="3" fill="url(#gearGradient)" rx="1.5"/>
+    <rect x="30" y="-1.5" width="14" height="3" fill="url(#gearGradient)" rx="1.5"/>
+    <rect x="-30" y="-30" width="3" height="14" transform="rotate(45)" fill="url(#gearGradient)" rx="1.5"/>
+    <rect x="27" y="27" width="3" height="14" transform="rotate(45)" fill="url(#gearGradient)" rx="1.5"/>
+    <rect x="30" y="-30" width="3" height="14" transform="rotate(-45)" fill="url(#gearGradient)" rx="1.5"/>
+    <rect x="-27" y="27" width="3" height="14" transform="rotate(-45)" fill="url(#gearGradient)" rx="1.5"/>
+    
+    <!-- Center hole with depth -->
+    <circle cx="0" cy="0" r="14" fill="#78350f" opacity="0.4"/>
     <circle cx="0" cy="0" r="12" fill="white"/>
-    <!-- Highlight on gear -->
-    <ellipse cx="-8" cy="-8" rx="8" ry="8" fill="white" opacity="0.3"/>
+    <circle cx="-2" cy="-2" r="10" fill="#fef3c7" opacity="0.5"/>
+    
+    <!-- Gear highlight for 3D effect -->
+    <ellipse cx="-10" cy="-10" rx="12" ry="12" fill="white" opacity="0.4"/>
   </g>
   
-  <!-- Central shaft -->
+  <!-- Central shaft (golden-bronze) -->
   <rect x="96" y="60" width="8" height="50" fill="url(#gearGradient)" rx="4"/>
+  <rect x="98" y="62" width="4" height="46" fill="url(#gearHighlight)" rx="2" opacity="0.6"/>
   
-  <!-- Lightning bolt with glow -->
+  <!-- Lightning bolt with strong yellow glow and white core -->
   <defs>
-    <filter id="glow">
-      <feGaussianBlur stdDeviation="2" result="coloredBlur"/>
+    <filter id="lightningGlow">
+      <feGaussianBlur stdDeviation="3" result="coloredBlur"/>
       <feMerge>
         <feMergeNode in="coloredBlur"/>
         <feMergeNode in="SourceGraphic"/>
       </feMerge>
     </filter>
   </defs>
-  <path d="M 100 50 L 90 80 L 96 80 L 100 110 L 110 80 L 104 80 Z" fill="#fbbf24" filter="url(#glow)" opacity="0.9"/>
-  <path d="M 100 50 L 94 70 L 100 70 L 100 90 L 106 70 L 100 70 Z" fill="white" opacity="0.9"/>
+  <!-- Outer yellow glow -->
+  <path d="M 100 50 L 88 85 L 95 85 L 100 115 L 112 85 L 105 85 Z" fill="#fbbf24" filter="url(#lightningGlow)" opacity="0.9"/>
+  <!-- Inner white core -->
+  <path d="M 100 50 L 92 75 L 98 75 L 100 95 L 108 75 L 102 75 Z" fill="white" opacity="0.95"/>
   
-  <!-- Electrical clamp/terminal at top -->
-  <rect x="92" y="40" width="16" height="12" fill="url(#gearGradient)" rx="2"/>
-  <rect x="96" y="44" width="8" height="4" fill="#92400e" rx="1"/>
-  <circle cx="100" cy="46" r="3" fill="#78350f"/>
+  <!-- Electrical clamp/terminal at top (more detailed) -->
+  <rect x="90" y="40" width="20" height="14" fill="url(#gearGradient)" rx="3"/>
+  <rect x="94" y="44" width="12" height="6" fill="#92400e" rx="1"/>
+  <!-- Screw detail -->
+  <circle cx="100" cy="47" r="3.5" fill="#78350f"/>
+  <circle cx="100" cy="47" r="2" fill="#92400e"/>
+  <path d="M 100 44 L 100 50 M 97 47 L 103 47" stroke="#b45309" stroke-width="0.5"/>
   
-  <!-- Red wire (left) -->
-  <path d="M 88 40 Q 70 30, 50 20" stroke="#dc2626" stroke-width="4" fill="none" stroke-linecap="round"/>
-  <circle cx="50" cy="20" r="4" fill="#dc2626"/>
-  <circle cx="50" cy="20" r="2" fill="#fca5a5"/>
+  <!-- Red wire (left, thicker and more curved) -->
+  <path d="M 88 40 Q 70 32, 50 22 Q 30 15, 25 18" stroke="#dc2626" stroke-width="5" fill="none" stroke-linecap="round"/>
+  <path d="M 88 40 Q 70 32, 50 22 Q 30 15, 25 18" stroke="#fca5a5" stroke-width="2.5" fill="none" stroke-linecap="round" opacity="0.6"/>
+  <circle cx="25" cy="18" r="5" fill="#dc2626"/>
+  <circle cx="25" cy="18" r="3" fill="#fca5a5"/>
+  <circle cx="25" cy="18" r="1.5" fill="white" opacity="0.8"/>
   
-  <!-- Blue wire (right) -->
-  <path d="M 112 40 Q 130 30, 150 20" stroke="#1e40af" stroke-width="4" fill="none" stroke-linecap="round"/>
-  <circle cx="150" cy="20" r="4" fill="#1e40af"/>
-  <circle cx="150" cy="20" r="2" fill="#93c5fd"/>
+  <!-- Blue wire (right, thicker and more curved) -->
+  <path d="M 112 40 Q 130 32, 150 22 Q 170 15, 175 18" stroke="#1e40af" stroke-width="5" fill="none" stroke-linecap="round"/>
+  <path d="M 112 40 Q 130 32, 150 22 Q 170 15, 175 18" stroke="#93c5fd" stroke-width="2.5" fill="none" stroke-linecap="round" opacity="0.6"/>
+  <circle cx="175" cy="18" r="5" fill="#1e40af"/>
+  <circle cx="175" cy="18" r="3" fill="#93c5fd"/>
+  <circle cx="175" cy="18" r="1.5" fill="white" opacity="0.8"/>
 </svg>
