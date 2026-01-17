@@ -43,7 +43,7 @@ export function PlatingCalculator({ totalSurfaceArea_dm2 }: PlatingCalculatorPro
   // Stage 3 state (for 3-stage jobs)
   const [stage3Density, setStage3Density] = useState<string>('1.5');
   const [stage3Mode, setStage3Mode] = useState<CalculationMode>('thickness-to-time');
-  const [stage3ThicknessInput, setStage3ThicknessInput] = useState<string>('10');
+  const [stage3ThicknessInput, setStage3ThicknessInput] = useState<string>('1.0');
   const [stage3TimeInput, setStage3TimeInput] = useState<string>('01:00:00');
 
   const currentDensityNum = parseFloat(currentDensity) || 0;
@@ -87,6 +87,21 @@ export function PlatingCalculator({ totalSurfaceArea_dm2 }: PlatingCalculatorPro
     }
     return 0;
   }, [jobType, totalSurfaceArea_dm2, currentDensityNum, stage3DensityNum]);
+
+  // Stage 1 & 2 current calculations (for 3-stage jobs)
+  const stage1Current = useMemo(() => {
+    if (jobType === 'three-stage' && totalSurfaceArea_dm2 > 0 && stage1DensityNum > 0) {
+      return calculateTotalCurrent(totalSurfaceArea_dm2, stage1DensityNum);
+    }
+    return 0;
+  }, [jobType, totalSurfaceArea_dm2, stage1DensityNum]);
+
+  const stage2Current = useMemo(() => {
+    if (jobType === 'three-stage' && totalSurfaceArea_dm2 > 0 && stage2DensityNum > 0) {
+      return calculateTotalCurrent(totalSurfaceArea_dm2, stage2DensityNum);
+    }
+    return 0;
+  }, [jobType, totalSurfaceArea_dm2, stage2DensityNum]);
 
   const depositionRate = useMemo(() => {
     const density = jobType === 'single' ? currentDensityNum : stage3DensityNum;
@@ -725,6 +740,26 @@ export function PlatingCalculator({ totalSurfaceArea_dm2 }: PlatingCalculatorPro
           </div>
         ) : (
           <div>
+            {/* Stage 1 & 2 Current Results */}
+            <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '15px', marginBottom: '20px' }}>
+              <div>
+                <div style={{ fontSize: '12px', color: '#666', marginBottom: '4px' }}>
+                  Stage 1 Required Current
+                </div>
+                <div style={{ fontSize: '20px', fontWeight: '600' }}>
+                  {stage1Current > 0 ? `${stage1Current.toFixed(3)} A` : 'N/A'}
+                </div>
+              </div>
+              <div>
+                <div style={{ fontSize: '12px', color: '#666', marginBottom: '4px' }}>
+                  Stage 2 Required Current
+                </div>
+                <div style={{ fontSize: '20px', fontWeight: '600' }}>
+                  {stage2Current > 0 ? `${stage2Current.toFixed(3)} A` : 'N/A'}
+                </div>
+              </div>
+            </div>
+
             {/* Stage 3 Results */}
             <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '15px', marginBottom: '20px' }}>
               {stage3Mode === 'thickness-to-time' ? (
