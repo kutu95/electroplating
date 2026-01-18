@@ -732,7 +732,7 @@ export function PlatingCalculator({ totalSurfaceArea_dm2 }: PlatingCalculatorPro
             {stage3Mode === 'thickness-to-time' ? (
               <div style={{ marginBottom: '15px' }}>
                 <label style={{ display: 'block', marginBottom: '8px', fontWeight: '500' }}>
-                  Target Total Thickness (after all 3 stages)
+                  Target Total Thickness (after all {jobType === 'two-stage' ? '2' : '3'} stages)
                 </label>
                 <input
                   type="number"
