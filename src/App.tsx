@@ -47,22 +47,20 @@ function App() {
     : manualSurfaceArea_dm2;
 
   return (
-    <div style={{ maxWidth: '1200px', margin: '0 auto', padding: '20px' }}>
+    <div style={{ 
+      maxWidth: '1200px', 
+      margin: '0 auto', 
+      padding: '20px',
+      backgroundColor: 'rgba(255, 255, 255, 0.95)',
+      borderRadius: '8px',
+      boxShadow: '0 2px 8px rgba(0,0,0,0.1)',
+      marginTop: '20px',
+      marginBottom: '20px'
+    }}>
       <header style={{ marginBottom: '30px' }}>
-        <div style={{ display: 'flex', alignItems: 'center', gap: '15px', marginBottom: '10px' }}>
-          <img 
-            src="/logo.svg" 
-            alt="Electroplating Calculator Logo" 
-            style={{ 
-              height: '48px', 
-              width: '48px',
-              flexShrink: 0
-            }} 
-          />
-          <h1 style={{ fontSize: '32px', margin: 0 }}>
-            Electroplating Calculator
-          </h1>
-        </div>
+        <h1 style={{ fontSize: '32px', margin: 0, marginBottom: '10px' }}>
+          Electroplating Calculator
+        </h1>
         <p style={{ color: '#666', fontSize: '14px' }}>
           Workshop-grade calculator for computing surface area and electroplating parameters
           using Faraday's law
@@ -166,7 +164,7 @@ function App() {
             style={{
               marginBottom: '20px',
               padding: '20px',
-              backgroundColor: '#fff',
+              backgroundColor: 'rgba(255, 255, 255, 0.85)',
               borderRadius: '8px',
               boxShadow: '0 2px 4px rgba(0,0,0,0.1)',
             }}

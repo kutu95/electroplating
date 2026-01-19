@@ -286,7 +286,7 @@ export function PlatingCalculator({ totalSurfaceArea_dm2 }: PlatingCalculatorPro
       style={{
         marginTop: '30px',
         padding: '20px',
-        backgroundColor: '#fff',
+        backgroundColor: 'rgba(255, 255, 255, 0.85)',
         borderRadius: '8px',
         boxShadow: '0 2px 4px rgba(0,0,0,0.1)',
       }}
@@ -539,7 +539,7 @@ export function PlatingCalculator({ totalSurfaceArea_dm2 }: PlatingCalculatorPro
         <>
           {/* 2-Stage or 3-Stage UI */}
           {/* Stage 1 */}
-          <div style={{ marginBottom: '20px', padding: '15px', backgroundColor: '#f9f9f9', borderRadius: '4px' }}>
+          <div style={{ marginBottom: '20px', padding: '15px', backgroundColor: 'rgba(249, 249, 249, 0.85)', borderRadius: '4px' }}>
             <h3 style={{ marginBottom: '15px', fontSize: '18px' }}>Stage 1</h3>
             <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '15px' }}>
               <div>
@@ -592,7 +592,7 @@ export function PlatingCalculator({ totalSurfaceArea_dm2 }: PlatingCalculatorPro
 
           {/* Stage 2 (only for 3-stage jobs) */}
           {jobType === 'three-stage' && (
-          <div style={{ marginBottom: '20px', padding: '15px', backgroundColor: '#f9f9f9', borderRadius: '4px' }}>
+          <div style={{ marginBottom: '20px', padding: '15px', backgroundColor: 'rgba(249, 249, 249, 0.85)', borderRadius: '4px' }}>
             <h3 style={{ marginBottom: '15px', fontSize: '18px' }}>Stage 2</h3>
             <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '15px' }}>
               <div>
@@ -645,7 +645,7 @@ export function PlatingCalculator({ totalSurfaceArea_dm2 }: PlatingCalculatorPro
           )}
 
           {/* Final Stage (Stage 2 for 2-stage, Stage 3 for 3-stage) */}
-          <div style={{ marginBottom: '20px', padding: '15px', backgroundColor: '#f0f8ff', borderRadius: '4px' }}>
+          <div style={{ marginBottom: '20px', padding: '15px', backgroundColor: 'rgba(240, 248, 255, 0.85)', borderRadius: '4px' }}>
             <h3 style={{ marginBottom: '15px', fontSize: '18px' }}>
               {jobType === 'two-stage' ? 'Stage 2' : 'Stage 3'}
             </h3>
@@ -786,7 +786,7 @@ export function PlatingCalculator({ totalSurfaceArea_dm2 }: PlatingCalculatorPro
         style={{
           marginTop: '30px',
           padding: '20px',
-          backgroundColor: '#f5f5f5',
+          backgroundColor: 'rgba(245, 245, 245, 0.85)',
           borderRadius: '4px',
         }}
       >
@@ -934,7 +934,7 @@ export function PlatingCalculator({ totalSurfaceArea_dm2 }: PlatingCalculatorPro
 
             {/* Cumulative Summary */}
             {thicknessAfterStage1 > 0 && (
-              <div style={{ padding: '15px', backgroundColor: '#fff', borderRadius: '4px', border: '1px solid #ddd' }}>
+              <div style={{ padding: '15px', backgroundColor: 'rgba(255, 255, 255, 0.85)', borderRadius: '4px', border: '1px solid #ddd' }}>
                 <h4 style={{ marginBottom: '10px', fontSize: '16px' }}>Cumulative Summary</h4>
                 <div style={{ display: 'grid', gridTemplateColumns: jobType === 'three-stage' ? '1fr 1fr 1fr' : '1fr 1fr', gap: '10px', fontSize: '14px' }}>
                   <div>

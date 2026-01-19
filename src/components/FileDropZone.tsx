@@ -114,7 +114,7 @@ export function FileDropZone({ onFilesLoaded, unit }: FileDropZoneProps) {
         borderRadius: '8px',
         padding: '40px',
         textAlign: 'center',
-        backgroundColor: isDragging ? '#f0f8ff' : '#fafafa',
+        backgroundColor: isDragging ? 'rgba(240, 248, 255, 0.85)' : 'rgba(250, 250, 250, 0.85)',
         cursor: 'pointer',
         transition: 'all 0.3s ease',
       }}

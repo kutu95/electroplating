@@ -18,12 +18,12 @@ export function ResultsTable({ files }: ResultsTableProps) {
         style={{
           width: '100%',
           borderCollapse: 'collapse',
-          backgroundColor: '#fff',
+          backgroundColor: 'rgba(255, 255, 255, 0.85)',
           boxShadow: '0 2px 4px rgba(0,0,0,0.1)',
         }}
       >
         <thead>
-          <tr style={{ backgroundColor: '#f5f5f5' }}>
+          <tr style={{ backgroundColor: 'rgba(245, 245, 245, 0.85)' }}>
             <th
               style={{
                 padding: '12px',
@@ -57,7 +57,7 @@ export function ResultsTable({ files }: ResultsTableProps) {
           ))}
           <tr
             style={{
-              backgroundColor: '#f9f9f9',
+              backgroundColor: 'rgba(249, 249, 249, 0.85)',
               fontWeight: '600',
               borderTop: '2px solid #333',
             }}
